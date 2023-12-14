@@ -6,12 +6,13 @@ import torch
 import numpy as np
 import torch.nn.functional as F
 import torch.optim as optim
-from gcn import GCN
-from fga import FGA
-from utils import *
+from src.gcn import GCN
+from src.fga import FGA
+from src.utils import *
 from dataset import Dataset
 from tqdm import tqdm
 import argparse
+import os
 
 parser = argparse.ArgumentParser()
 parser.add_argument('--seed', type=int, default=15, help='Random seed.')
@@ -235,6 +236,9 @@ if __name__ == '__main__':
         np.random.seed(42*i)
         torch.manual_seed(42*i)
 
+
+        # __location__ = os.path.realpath(os.path.join(os.getcwd(), os.path.dirname(__file__)))
+        # data_loc = os.path.join(__location__, name=args.dataset)
         data = Dataset(root='./data/', name=args.dataset)
         adj, features, labels = data.adj, data.features, data.labels
         idx_train, idx_val, idx_test = data.idx_train, data.idx_val, data.idx_test

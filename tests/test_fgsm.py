@@ -2,9 +2,9 @@ import torch
 import numpy as np
 import torch.nn.functional as F
 import torch.optim as optim
-from gcn import GCN
-from fgsm import fgsm
-from utils import *
+from src.gcn import GCN
+from src.fgsm import fgsm
+from src.utils import *
 from dataset import Dataset
 import argparse
 import random
@@ -83,7 +83,7 @@ def attack_node(feat, adj, labels, target_gcn, target_node, attack_structure, at
 
     return modified_adj, modified_feat
 
- 
+
 
 def train(adj,feat,labels, model):
     
@@ -94,7 +94,7 @@ def train(adj,feat,labels, model):
                            lr=0.01, weight_decay=5e-4)
     gcn.fit(feat, adj, labels, idx_train, idx_val,patience=200) 
     return gcn
-    
+
 
 def test(adj,feat,labels,model,target_node):
     output = model.forward(feat,adj)
@@ -104,7 +104,40 @@ def test(adj,feat,labels,model,target_node):
 #     probs = torch.exp(output[[target_node]])
     acc_test = (output.argmax(1)[target_node] == labels[target_node])
     return acc_test
+def select_nodes(target_model=None):
+    '''
+    selecting nodes as reported in nettack paper:
+    (i) the 10 nodes with highest margin of classification, i.e. they are clearly correctly classified,
+    (ii) the 10 nodes with lowest margin (but still correctly classified) and
+    (iii) 20 more nodes randomly
+    '''
 
+    if target_model is None:
+        target_model = GCN(nfeat=features.shape[1],
+                nhid=args.hidden,
+                nclass=labels.max().item() + 1,
+                dropout=args.dropout,            
+                n_nodes = features.shape[0],
+                lbdas = LBDA,train_lbda=args.train_lbda, damping=damping)
+        target_model = target_model.to(device)
+        target_model.fit(features, adj, labels, idx_train, idx_val, patience=30)
+    target_model.eval()
+    output = target_model.predict()
+
+    margin_dict = {}
+    for idx in idx_test:
+        margin = classification_margin(output[idx], labels[idx])
+        if margin < 0: # only keep the nodes correctly classified
+            continue
+        margin_dict[idx] = margin
+    sorted_margins = sorted(margin_dict.items(), key=lambda x:x[1], reverse=True)
+    high = [x for x, y in sorted_margins[: 10]]
+    low = [x for x, y in sorted_margins[-10: ]]
+    
+    other = [x for x, y in sorted_margins[10: -10]]
+    other = np.random.choice(other, 20, replace=False).tolist()
+
+    return high + low + other
 
 
 if __name__ == '__main__':
@@ -150,6 +183,9 @@ if __name__ == '__main__':
     
     print('=== testing GCN on perturbed graph (node-wise) ===')
     
+
+
+
     target_nodes = select_nodes(model)
 
     for node in target_nodes:

@@ -14,8 +14,19 @@ simple but surprisingly generalisable defense mechanism for GCN models.
 
 # How this repo is structured
 * `data` contains the citation network datasets we used.
-* `models` are the different adverssarial attack models.
+* `src` are the different adverssarial attack models.
 * `tests` contains code for testing models on the data.
+
+## Running the code
+
+1. Make a virtual environment with `python3 -m venv .venv` and enter the dir with `cd .venv`
+2. Install dependencies by running `pip3 install -e .`
+3. Run a test using 
+```
+python3 tests/test_nettack.py --lbda 0 0 
+```
+
+This will show results for adversarial attack `Nettack` (see [Adversarial Attacks on Neural Networks for Graph Data](https://arxiv.org/abs/1805.07984)) with 0 damping. Amoung of damping at 1st and 2nd grapoh convolution layers is controlled by changing values of `--lbda` argument.
 
 # References
 This repo is building up on the [DeepRobust](https://github.com/DSE-MSU/DeepRobust) repository.

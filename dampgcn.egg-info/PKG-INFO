@@ -1,0 +1,17 @@
+Metadata-Version: 2.1
+Name: dampgcn
+Version: 0.1
+Requires-Dist: matplotlib
+Requires-Dist: numpy
+Requires-Dist: ipdb
+Requires-Dist: torch
+Requires-Dist: scipy
+Requires-Dist: torchvision
+Requires-Dist: texttable
+Requires-Dist: networkx
+Requires-Dist: numba
+Requires-Dist: Pillow
+Requires-Dist: scikit_learn
+Requires-Dist: tensorboardX
+Requires-Dist: tqdm
+Requires-Dist: pandas

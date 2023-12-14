@@ -1,9 +1,9 @@
 import torch
 import argparse
-from pyg_dataset import Dataset, Dpr2Pyg
-from gat import GAT
+from src.pyg_dataset import Dataset, Dpr2Pyg
+from src.gat import GAT
 from dataset import Dataset
-from attacked_data import PrePtbDataset
+from src.attacked_data import PrePtbDataset
 import numpy as np
 
 parser = argparse.ArgumentParser()

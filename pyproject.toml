@@ -1,0 +1,27 @@
+[build-system]
+requires = ["setuptools"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "dampgcn"
+version = "0.1"
+dependencies = [
+    "matplotlib",
+    "numpy",
+    "ipdb",
+    "torch",
+    "scipy",
+    "torchvision",
+    "texttable",
+    "networkx",
+    "numba",
+    "Pillow",
+    "scikit_learn",
+    "tensorboardX",
+    "tqdm",
+    "pandas",
+]
+
+[tool.setuptools.packages.find]
+namespaces = false
+

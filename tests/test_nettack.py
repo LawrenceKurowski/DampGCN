@@ -6,9 +6,9 @@ import torch
 import numpy as np
 import torch.nn.functional as F
 import torch.optim as optim
-from gcn import GCN
-from nettack import Nettack
-from utils import *
+from src.gcn import GCN
+from src.nettack import Nettack
+from src.utils import *
 from dataset import Dataset
 from torch_geometric.data import Data
 import argparse
